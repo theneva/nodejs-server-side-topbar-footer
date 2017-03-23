@@ -1,6 +1,10 @@
 const fs = require('fs');
 const fetchTopbar = require('./fetch-topbar');
+const fetchFooter = require('./fetch-footer');
 const cheerio = require('cheerio');
+const express = require('express');
+
+const app = express();
 
 function fetchIndex() {
   return new Promise((resolve, reject) => {
@@ -14,13 +18,20 @@ function fetchIndex() {
   });
 }
 
-function handle(token) {
+async function handle(token) {
   const eventualTopbar = fetchTopbar(token);
-  fetchIndex()
-    .then(index => [eventualTopbar, cheerio.load(index)])
-    .then(([eventualTopbar, $]) => eventualTopbar.then(topbarHtml => $('#topbar').html(topbarHtml).html()))
-    .then(console.log)
-    .catch(console.error);
+  const eventualFooter = fetchFooter(token);
+
+  const index = await fetchIndex();
+  const $ = cheerio.load(index);
+
+  $('#topbar').html(await eventualTopbar);
+  $('#footer').html(await eventualFooter);
+
+  return $.html();
 }
 
-handle(`a super secret token: ${i}`);
+app.get('/:token', async (req, res) => res.send(await handle(req.params.token)));
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log('listening on port', port));
