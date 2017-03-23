@@ -18,12 +18,9 @@ function handle(token) {
   const eventualTopbar = fetchTopbar(token);
   fetchIndex()
     .then(index => [eventualTopbar, cheerio.load(index)])
-    .then(([eventualTopbar, $]) => eventualTopbar.then(topbarHtml => {
-      $('#topbar').html(topbarHtml);
-      return $.html();
-    }))
+    .then(([eventualTopbar, $]) => eventualTopbar.then(topbarHtml => $('#topbar').html(topbarHtml).html()))
     .then(console.log)
     .catch(console.error);
 }
 
-handle('a super secret token');
+handle(`a super secret token: ${i}`);
