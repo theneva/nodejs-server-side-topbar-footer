@@ -1,0 +1,12 @@
+{
+  "name": "template-string-lib",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "cheerio": "^0.22.0"
+  }
+}
